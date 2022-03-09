@@ -2,6 +2,8 @@
 
 Portable HTTP Server to run shell commands passed as HTTP requests
 
+Very hacky; not for production usage
+
 ## Usage
 To start the server, run the script as follows:
 
