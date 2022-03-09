@@ -8,7 +8,7 @@ import urllib
 import sys
 
 SCRIPT_NAME = os.path.basename(sys.argv[0])
-prefix = SCRIPT_NAME.split('.py')[0].upper()
+prefix = SCRIPT_NAME.split(".py")[0].upper()
 
 HOST = os.getenv(f"{prefix}_HOST", "0.0.0.0")
 PORT = int(os.getenv(f"{prefix}_PORT", "4001"))
@@ -27,23 +27,26 @@ def run_command(command):
 class PythonServer(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         querystring_params = get_qs_params(self.path)
-        command = querystring_params.get('command', [''])
+        command = querystring_params.get("command", [""])
         command = next(iter(command))
-        token = querystring_params.get('token', [''])
+        token = querystring_params.get("token", [""])
         token = next(iter(token))
         # token is required
 
         response_text = "OK"
         if command and token == TOKEN:
-            token = querystring_params['token']
+            token = querystring_params["token"]
             print("running command: ", command)
             stdout = run_command(command)
-            response_text = "\n".join((f"Running command: {command}", f"Command output: {stdout}"))
+            response_text = "\n".join(
+                (f"Running command: {command}", f"Command output: {stdout}")
+            )
 
         self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
+        self.send_header("Content-type", "text/plain")
         self.end_headers()
         self.wfile.write(response_text.encode())
+
 
 webServer = http.server.HTTPServer((HOST, PORT), PythonServer)
 
